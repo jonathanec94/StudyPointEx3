@@ -22,60 +22,54 @@ import javax.ws.rs.Produces;
  *
  * @author jones
  */
-@Path("AllPlayerNames")
+@Path("")
 public class ApiResource {
-String hej;
+
+    String hej;
     ArrayList<Spiller> players = new ArrayList<Spiller>();
     @Context
-        private UriInfo context;
+    private UriInfo context;
 
     public ApiResource() {
-        if(players.isEmpty())
-        {
-           Spiller s1 = new Spiller(1, "James Rodríguez", "Columbia");
-           Spiller s2 = new Spiller(2, "Thomas Mueller", "Tyskland");
-           Spiller s3 = new Spiller(3, "Messi", "Argentina");
-           Spiller s4 = new Spiller(4, "Neymar", "Brazilien");
-           Spiller s5 = new Spiller(5, "Van Persie", "Holland");
-           players.add(s1); players.add(s2); players.add(s3); players.add(s4); players.add(s5);
+        if (players.isEmpty()) {
+            Spiller s1 = new Spiller(1, "James Rodríguez", "Columbia");
+            Spiller s2 = new Spiller(2, "Thomas Mueller", "Tyskland");
+            Spiller s3 = new Spiller(3, "Messi", "Argentina");
+            Spiller s4 = new Spiller(4, "Neymar", "Brazilien");
+            Spiller s5 = new Spiller(5, "Van Persie", "Holland");
+            players.add(s1);
+            players.add(s2);
+            players.add(s3);
+            players.add(s4);
+            players.add(s5);
         }
-        
-        
-    }
 
+    }
+    @Path("AllPlayerNames")
     @GET
     @Produces("application/json")
     public String getPlayers() {
-     Gson g = new Gson();
-     String clubjason = g.toJson(players);
-     return clubjason;
+        Gson g = new Gson();
+        String clubjason = g.toJson(players);
+        return clubjason;
     }
-    
+
     @GET
     @Produces("application/json")
-    @Path("/{id}")
-    public String getOne(@PathParam("id") int id )
-    {
-     String res = "{\"errCode\": 404, \"errMsg\" : \"No player found with the given ID\" }";
+    @Path("player/{id}")
+    public String getOnePlayer(@PathParam("id") int id) {
+        String res = "{\"errCode\": 404, \"errMsg\" : \"No player found with the given ID\" }";
         for (int i = 0; i < players.size(); i++) {
-           if(players.get(i).getId() == id)
-           {
-               res = players.get(i).toString();
-              
-           }
-        
-    }
+            if (players.get(i).getId() == id) {
+                res = players.get(i).toString();
+            }
+        }
         return res;
     }
 
-    /**
-     * PUT method for updating or creating an instance of ApiResource
-     * @param content representation for the resource
-     * @return an HTTP response with content of the updated or created resource.
-     */
     @PUT
     @Consumes("application/json")
     public void putXml(String content) {
-     
+
     }
 }
