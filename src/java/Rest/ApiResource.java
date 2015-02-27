@@ -7,7 +7,14 @@ package Rest;
 
 import Domain.Spiller;
 import com.google.gson.Gson;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
@@ -45,6 +52,7 @@ public class ApiResource {
         }
 
     }
+
     @Path("AllPlayerNames")
     @GET
     @Produces("application/json")
@@ -54,11 +62,33 @@ public class ApiResource {
         return clubjason;
     }
 
+    @Path("AllPlayersFromWeb")
+    @GET
+    @Produces("application/json")
+    public String getPlayersFromWeb() {
+         URL url;
+         String jsonStr = null;
+        try {
+             url = new URL("http://footballpool.dataaccess.eu/data/info.wso/AllPlayerNames/JSON/debug?bSelected=");
+            URLConnection con = url.openConnection();
+            Scanner scan = new Scanner(con.getInputStream());
+            
+            if (scan.hasNext()) {
+                jsonStr = scan.nextLine();
+            }
+            System.out.println(jsonStr);
+            scan.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ApiResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return jsonStr;
+    }
+
     @GET
     @Produces("application/json")
     @Path("player/{id}")
     public String getOnePlayer(@PathParam("id") int id) {
-         Gson g = new Gson();
+        Gson g = new Gson();
         String res = "{\"errCode\": 404, \"errMsg\" : \"No player found with the given ID\" }";
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i).getId() == id) {

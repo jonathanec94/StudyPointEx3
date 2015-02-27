@@ -6,6 +6,8 @@ and open the template in the editor.
 -->
 <html>
     <head>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
         <title>StudyPointEx3</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,20 +16,69 @@ and open the template in the editor.
 
             $(document).ready(function e() {
                 $("#findspiller").click(printPlayer);
+                $("#hentAll").click(printPlayers);
+                $("#hentspillerfraweb").click(printPlayersfromweb);
             });
 
             function printPlayer()
             {
-               var id = $('#idhej').val();
+                var id = $('#idhej').val();
                 var request = $.ajax({
                     url: "api/player/" + id,
                     dataType: "json",
                     type: "GET"
                 });
                 request.done(function (Spiller) {
-                    
-                    $("#enSpiller").html("<b>Spiller: </b>"+Spiller.id + " " +Spiller.name + " " + Spiller.Country);
-                  
+
+                    $("#enSpiller").html("<b>Spiller: </b>" + Spiller.id + " " + Spiller.name + " " + Spiller.Country);
+
+                });
+                request.fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+            }
+
+            function printPlayers()
+            {
+                var request = $.ajax({
+                    url: "api/AllPlayerNames",
+                    dataType: "json",
+                    type: "GET"
+                });
+                request.done(function (Spiller) {
+                    for (var i = 0; i < Spiller.length; i++) {
+                        var td = "<tr>";
+                        td += "<td>"+Spiller[i].id + "</td>";
+                        td += "<td>"+Spiller[i].name + "</td>";
+                        td += "<td>"+Spiller[i].Country + "</td>";
+                        td+= "</tr>";
+                       $("#Allespillere").append(td);
+                    }
+                });
+                request.fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+            }
+            
+            
+            function printPlayersfromweb()
+            {
+                var request = $.ajax({
+                    url: "api/AllPlayersFromWeb",
+                    dataType: "json",
+                    type: "GET"
+                });
+                request.done(function (Spiller) {
+                    for (var i = 0; i < Spiller.length; i++) {
+                        var td = "<tr>";
+                        td += "<td>"+Spiller[i].iId + "</td>";
+                        td += "<td>"+Spiller[i].sName + "</td>";
+                        td += "<td>"+Spiller[i].sCountryName + "</td>";
+                        td += "<td>" +"<img src='"+Spiller[i].sCountryFlag+"'/>" +"</td>";
+                        td += "<td>" +"<img src='"+Spiller[i].sCountryFlagLarge+"'/>" +"</td>";
+                        td+= "</tr>";
+                       $("#Allespillerefraweb").append(td);
+                    }
                 });
                 request.fail(function (jqXHR, textStatus) {
                     alert("Request failed: " + textStatus);
@@ -44,9 +95,35 @@ and open the template in the editor.
             </thead>
             <tbody>   
                 <tr> <td> <input type="text" id="idhej" name="id"/></td><td> <input type="submit" id="findspiller" name="findspiller" value="Find Spiller"/></td></tr>
-                
+            <img src=""/>
             </tbody>
         </table>
         <div id="enSpiller"></div>
+
+        <br />
+        <br />
+        <br />
+        <button id="hentAll">Hent alle spillere</button>
+
+        <table class="table">
+            <thead>
+                <tr><th>ID</th><th>Navn</th><th>Land</th></tr>
+            </thead>
+            <tbody id="Allespillere">
+                
+            </tbody>
+        </table>
+        
+        <h1>Hent spillere fra web</h1>
+        <button id="hentspillerfraweb">Hent spillere fra web</button>
+        
+           <table class="table">
+            <thead>
+                <tr><th>ID</th><th>Navn</th><th>Land</th><th>Small flag</th><th>Large flag</th></tr>
+            </thead>
+            <tbody id="Allespillerefraweb">
+                
+            </tbody>
+        </table>
     </body>
 </html>
