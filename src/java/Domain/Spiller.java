@@ -10,8 +10,8 @@ package Domain;
  * @author jones
  */
 public class Spiller {
-    int id;
-    String name, Country;
+  public int id;
+  public  String name, Country;
 
     public Spiller(int id, String navn, String land) {
         this.id = id;

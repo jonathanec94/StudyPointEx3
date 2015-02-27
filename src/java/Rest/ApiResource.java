@@ -58,10 +58,11 @@ public class ApiResource {
     @Produces("application/json")
     @Path("player/{id}")
     public String getOnePlayer(@PathParam("id") int id) {
+         Gson g = new Gson();
         String res = "{\"errCode\": 404, \"errMsg\" : \"No player found with the given ID\" }";
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i).getId() == id) {
-                res = players.get(i).toString();
+                res = g.toJson(players.get(i));
             }
         }
         return res;

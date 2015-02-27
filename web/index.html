@@ -6,11 +6,47 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>StudyPointEx3</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+        <script>
+
+            $(document).ready(function e() {
+                $("#findspiller").click(printPlayer);
+            });
+
+            function printPlayer()
+            {
+               var id = $('#idhej').val();
+                var request = $.ajax({
+                    url: "api/player/" + id,
+                    dataType: "json",
+                    type: "GET"
+                });
+                request.done(function (Spiller) {
+                    
+                    $("#enSpiller").html("<b>Spiller: </b>"+Spiller.id + " " +Spiller.name + " " + Spiller.Country);
+                  
+                });
+                request.fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+            }
+        </script>
     </head>
     <body>
-        <div>TODO write content</div>
+        <table id="table">
+            <thead>
+                <tr>
+                    <th>Find spiller</th>
+                </tr>    
+            </thead>
+            <tbody>   
+                <tr> <td> <input type="text" id="idhej" name="id"/></td><td> <input type="submit" id="findspiller" name="findspiller" value="Find Spiller"/></td></tr>
+                
+            </tbody>
+        </table>
+        <div id="enSpiller"></div>
     </body>
 </html>
