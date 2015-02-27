@@ -18,6 +18,9 @@ and open the template in the editor.
                 $("#findspiller").click(printPlayer);
                 $("#hentAll").click(printPlayers);
                 $("#hentspillerfraweb").click(printPlayersfromweb);
+                $("#findplayer").click(printPlayerfromwebbynick);
+                $("#findcountry").click(printPlayerfromwebbycountry);
+                
             });
 
             function printPlayer()
@@ -59,8 +62,6 @@ and open the template in the editor.
                     alert("Request failed: " + textStatus);
                 });
             }
-            
-            
             function printPlayersfromweb()
             {
                 var request = $.ajax({
@@ -69,6 +70,7 @@ and open the template in the editor.
                     type: "GET"
                 });
                 request.done(function (Spiller) {
+                    $("#Allespillerefraweb").text(" ");
                     for (var i = 0; i < Spiller.length; i++) {
                         var td = "<tr>";
                         td += "<td>"+Spiller[i].iId + "</td>";
@@ -78,6 +80,83 @@ and open the template in the editor.
                         td += "<td>" +"<img src='"+Spiller[i].sCountryFlagLarge+"'/>" +"</td>";
                         td+= "</tr>";
                        $("#Allespillerefraweb").append(td);
+                    }
+                });
+                request.fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+            }
+            
+            function printPlayerfromwebbynick()
+            {
+                
+                var player = $('#playername').val();
+                var truefalse = false;
+                var request = $.ajax({
+                    url: "api/AllPlayersFromWeb",
+                    dataType: "json",
+                    type: "GET"
+                });
+                request.done(function (Spiller) {
+                    $("#Allespillerefraweb").text(" ");
+                    for (var i = 0; i < Spiller.length; i++) {
+                        if(Spiller[i].sName===player)
+                        {
+                            truefalse = true;
+                        var td = "<tr>";
+                        td += "<td>"+Spiller[i].iId + "</td>";
+                        td += "<td>"+Spiller[i].sName + "</td>";
+                        td += "<td>"+Spiller[i].sCountryName + "</td>";
+                        td += "<td>" +"<img src='"+Spiller[i].sCountryFlag+"'/>" +"</td>";
+                        td += "<td>" +"<img src='"+Spiller[i].sCountryFlagLarge+"'/>" +"</td>";
+                        td+= "</tr>";
+                       $("#Allespillerefraweb").append(td);
+                        }
+                    }
+                    if(truefalse === false)
+                    {
+                         var td = "<tr>";
+                         td += "<td>ingen spillere matcher din søgning</td>";
+                         td+= "</tr>"
+                        $("#Allespillerefraweb").html(td);
+                    }
+                });
+                request.fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+            }
+            
+            function printPlayerfromwebbycountry()
+            {
+                var country = $('#playerfindcountry').val();
+                var truefalse = false;
+                var request = $.ajax({
+                    url: "api/AllPlayersFromWeb",
+                    dataType: "json",
+                    type: "GET"
+                });
+                request.done(function (Spiller) {
+                    $("#Allespillerefraweb").text(" ");
+                    for (var i = 0; i < Spiller.length; i++) {
+                        if(Spiller[i].sCountryName===country)
+                        {
+                            truefalse = true;
+                        var td = "<tr>";
+                        td += "<td>"+Spiller[i].iId + "</td>";
+                        td += "<td>"+Spiller[i].sName + "</td>";
+                        td += "<td>"+Spiller[i].sCountryName + "</td>";
+                        td += "<td>" +"<img src='"+Spiller[i].sCountryFlag+"'/>" +"</td>";
+                        td += "<td>" +"<img src='"+Spiller[i].sCountryFlagLarge+"'/>" +"</td>";
+                        td+= "</tr>";
+                       $("#Allespillerefraweb").append(td);
+                        }
+                    }
+                    if(truefalse === false)
+                    {
+                         var td = "<tr>";
+                         td += "<td>ingen spillere matcher din søgning</td>";
+                         td+= "</tr>"
+                        $("#Allespillerefraweb").html(td);
                     }
                 });
                 request.fail(function (jqXHR, textStatus) {
@@ -116,7 +195,15 @@ and open the template in the editor.
         
         <h1>Hent spillere fra web</h1>
         <button id="hentspillerfraweb">Hent spillere fra web</button>
-        
+        <br />
+         <br />
+        <p> spiller navn </p>
+        <input type="text" name="playername" id="playername"/>
+        <input type="submit" id="findplayer" value="søg"/>
+        <br />
+        <p> land </p>
+        <input type="text" name="playerfindcountry" id="playerfindcountry"/>
+        <input type="submit" id="findcountry" value="søg"/>
            <table class="table">
             <thead>
                 <tr><th>ID</th><th>Navn</th><th>Land</th><th>Small flag</th><th>Large flag</th></tr>
